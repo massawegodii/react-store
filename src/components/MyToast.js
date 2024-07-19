@@ -1,5 +1,6 @@
 import React from "react";
 import { Toast } from "react-bootstrap";
+import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 
 const MyToast = (props) => {
   const toastCss = {
@@ -21,15 +22,14 @@ const MyToast = (props) => {
         }`}
         show={props.show}
       >
-        <Toast.Header
-          className={`text-white ${
-            props.type === "success" ? "bg-success" : "bg-danger"
-          }`}
-          closeButton={false}
-        >
-          <strong className="mr-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>{props.message}</Toast.Body>
+        <Toast.Body style={{ display: "flex", alignItems: "center" }}>
+          {props.type === "success" ? (
+            <FaCheckCircle style={{ marginRight: "10px" }} />
+          ) : (
+            <FaExclamationTriangle style={{ marginRight: "10px" }} />
+          )}
+          {props.message}
+        </Toast.Body>
       </Toast>
     </div>
   );
