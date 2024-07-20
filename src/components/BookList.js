@@ -94,12 +94,13 @@ export default class BookList extends Component {
                       <td>{book.genre}</td>
                       <ButtonGroup>
                         <Link
-                          to={"edit/" + book.id}
+                          to={"/edit/"+book.id}
                           className="btn btn-sm btn-outline-primary"
                         >
                           <FontAwesomeIcon icon={faEdit} />
                         </Link>
                         {"  "}
+
                         <Button
                           onClick={() => this.deleteBook(book.id)}
                           size="sm"
