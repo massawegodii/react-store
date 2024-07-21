@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import Book from "./components/Book";
 import BookList from "./components/BookList";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import UserList from "./components/UserList";
 
 function App() {
   const marginTop = {
@@ -23,6 +24,7 @@ function App() {
               <Route path="/add" exact Component={Book} />
               <Route path="/edit/:id" exact Component={Book} />
               <Route path="/list" exact Component={BookList} />
+              <Route path="/user" exact Component={UserList} />
             </Routes>
           </Col>
         </Row>

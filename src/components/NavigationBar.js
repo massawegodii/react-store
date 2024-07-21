@@ -24,6 +24,9 @@ const NavigationBar = () => {
         <Link to={"list"} className="nav-link">
           Book List
         </Link>
+        <Link to={"user"} className="nav-link">
+          User List
+        </Link>
       </Nav>
     </Navbar>
   );

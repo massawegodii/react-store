@@ -29,13 +29,13 @@ const Book = () => {
   const [book, setBook] = useState(initialState);
   const [show, setShow] = useState({ visible: false, method: "" });
 
+  //Call the update in the form
   useEffect(() => {
     if (id) {
       findBookById(id);
     }
   }, [id]);
 
-  //Call the update in the form
   const findBookById = (bookId) => {
     axios
       .get("http://localhost:8081/rest/books/" + bookId)
