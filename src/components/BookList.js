@@ -1,6 +1,5 @@
 import { faEdit, faList, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { Component } from "react";
 import { Button, ButtonGroup, Card, Image, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -19,19 +18,29 @@ export default class BookList extends Component {
   }
 
   findAllBooks() {
-    axios
-      .get("http://localhost:8081/rest/books")
-      .then((response) => response.data)
+    fetch("http://localhost:8081/rest/books")
+      .then((response) => response.json())
       .then((data) => {
         this.setState({ books: data });
       });
   }
 
+  // findAllBooks() {
+  //   axios
+  //     .get("http://localhost:8081/rest/books")
+  //     .then((response) => response.data)
+  //     .then((data) => {
+  //       this.setState({ books: data });
+  //     });
+  // }
+
   deleteBook = (bookId) => {
-    axios
-      .delete("http://localhost:8081/rest/books/" + bookId)
-      .then((response) => {
-        if (response.data != null) {
+    fetch("http://localhost:8081/rest/books/" + bookId, {
+      method: "DELETE",
+    })
+      .then(response => response.json()) 
+      .then((data) => {
+        if (data) {
           this.setState({ show: true });
           setTimeout(() => this.setState({ show: false }), 3000);
           this.setState({
@@ -40,8 +49,24 @@ export default class BookList extends Component {
         } else {
           this.setState({ show: false });
         }
-      });
+      })
   };
+
+  // deleteBook = (bookId) => {
+  //   axios
+  //     .delete("http://localhost:8081/rest/books/" + bookId)
+  //     .then((response) => {
+  //       if (response.data != null) {
+  //         this.setState({ show: true });
+  //         setTimeout(() => this.setState({ show: false }), 3000);
+  //         this.setState({
+  //           books: this.state.books.filter((book) => book.id !== bookId),
+  //         });
+  //       } else {
+  //         this.setState({ show: false });
+  //       }
+  //     });
+  // };
 
   render() {
     return (
@@ -94,7 +119,7 @@ export default class BookList extends Component {
                       <td>{book.genre}</td>
                       <ButtonGroup>
                         <Link
-                          to={"/edit/"+book.id}
+                          to={"/edit/" + book.id}
                           className="btn btn-sm btn-outline-primary"
                         >
                           <FontAwesomeIcon icon={faEdit} />

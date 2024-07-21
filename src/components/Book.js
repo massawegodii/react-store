@@ -6,7 +6,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons/faPlusSquare";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
 import MyToast from "./MyToast";
@@ -37,17 +36,35 @@ const Book = () => {
   }, [id]);
 
   const findBookById = (bookId) => {
-    axios
-      .get("http://localhost:8081/rest/books/" + bookId)
+    fetch("http://localhost:8081/rest/books/" + bookId)
       .then((response) => {
-        if (response.data) {
-          setBook(response.data);
+        if (!response.ok) {
+          throw new Error("Failed to fetch book");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data) {
+          setBook(data);
         }
       })
       .catch((error) => {
-        console.log("Error" + error);
+        console.error("Error:", error);
       });
   };
+
+  // const findBookById = (bookId) => {
+  //   axios
+  //     .get("http://localhost:8081/rest/books/" + bookId)
+  //     .then((response) => {
+  //       if (response.data) {
+  //         setBook(response.data);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error" + error);
+  //     });
+  // };
 
   const resetBook = () => {
     setBook(initialState);
@@ -67,30 +84,84 @@ const Book = () => {
   const submitBook = (event) => {
     event.preventDefault();
 
-    axios.post("http://localhost:8081/rest/books", book).then((response) => {
-      if (response.data != null) {
-        setShow({ visible: true, method: "post" });
-        setTimeout(() => setShow({ ...show, visible: false }), 3000);
-      } else {
-        setShow({ ...show, visible: false });
-      }
-    });
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    fetch("http://localhost:8081/rest/books", {
+      method: "POST",
+      body: JSON.stringify(book),
+      headers,
+    })
+      .then((response) => response.json())
+      .then((book) => {
+        if (book) {
+          setShow({ visible: true, method: "post" });
+          setTimeout(() => setShow({ ...show, visible: false }), 3000);
+        } else {
+          setShow({ ...show, visible: false });
+        }
+      });
     resetBook();
   };
+
+  // const submitBook = (event) => {
+  //   event.preventDefault();
+
+  //   axios.post("http://localhost:8081/rest/books", book).then((response) => {
+  //     if (response.data != null) {
+  //       setShow({ visible: true, method: "post" });
+  //       setTimeout(() => setShow({ ...show, visible: false }), 3000);
+  //     } else {
+  //       setShow({ ...show, visible: false });
+  //     }
+  //   });
+  //   resetBook();
+  // };
 
   const updateBook = (event) => {
     event.preventDefault();
 
-    axios.put("http://localhost:8081/rest/books", book).then((response) => {
-      if (response.data != null) {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    fetch("http://localhost:8081/rest/books", {
+      method: "PUT",
+      body: JSON.stringify(book),
+      headers,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((err) => {
+            throw new Error(err.message || "Update failed");
+          });
+        }
+        return response.json();
+      })
+      .then((book) => {
         setShow({ visible: true, method: "put" });
         setTimeout(() => handleNavigateToList(), 2000);
-      } else {
+      })
+      .catch((error) => {
+        console.error("Error:", error);
         setShow({ ...show, visible: false });
-      }
-    });
+      });
+
     resetBook();
   };
+
+  // const updateBook = (event) => {
+  //   event.preventDefault();
+
+  //   axios.put("http://localhost:8081/rest/books", book).then((response) => {
+  //     if (response.data != null) {
+  //       setShow({ visible: true, method: "put" });
+  //       setTimeout(() => handleNavigateToList(), 2000);
+  //     } else {
+  //       setShow({ ...show, visible: false });
+  //     }
+  //   });
+  //   resetBook();
+  // };
 
   const { title, author, coverPhotoURL, isbnNumber, price, language, genre } =
     book;

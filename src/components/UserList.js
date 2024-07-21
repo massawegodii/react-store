@@ -69,6 +69,7 @@ const UserList = () => {
     if (pageNumber > 0 && pageNumber <= totalPages) setCurrentPage(pageNumber);
   };
 
+  //You can use users in currentUsers to map to get data when not use pagination
   return (
     <div>
       <Card className={"border border-dark bg-dark text-white"}>
