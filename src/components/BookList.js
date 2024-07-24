@@ -21,7 +21,15 @@ export default class BookList extends Component {
     fetch("http://localhost:8081/rest/books")
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ books: data });
+        if (Array.isArray(data)) {
+          this.setState({ books: data });
+        } else {
+          this.setState({ books: [] });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching books:", error);
+        this.setState({ books: [] });
       });
   }
 
@@ -38,7 +46,7 @@ export default class BookList extends Component {
     fetch("http://localhost:8081/rest/books/" + bookId, {
       method: "DELETE",
     })
-      .then(response => response.json()) 
+      .then((response) => response.json())
       .then((data) => {
         if (data) {
           this.setState({ show: true });
@@ -49,7 +57,7 @@ export default class BookList extends Component {
         } else {
           this.setState({ show: false });
         }
-      })
+      });
   };
 
   // deleteBook = (bookId) => {

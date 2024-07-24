@@ -1,0 +1,10 @@
+.margin-top {
+    margin-top: "20px",
+}
+
+
+.navbar-end {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
