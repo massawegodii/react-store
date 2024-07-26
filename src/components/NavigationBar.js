@@ -13,7 +13,7 @@ const NavigationBar = () => {
   const dispatch = useDispatch();
 
   const logout = () => {
-     dispatch(logoutUser());
+    dispatch(logoutUser());
   };
 
   const guestLinks = (
@@ -36,18 +36,20 @@ const NavigationBar = () => {
   );
   const userLinks = (
     <>
-      <Nav className="mr-auto">
-        <Link to={"add"} className="nav-link">
-          Add Book
-        </Link>
-        <Link to={"list"} className="nav-link">
-          Book List
-        </Link>
-        <Link to={"users"} className="nav-link">
-          User List
-        </Link>
-      </Nav>
-      <Nav className="navbar-right">
+      <div>
+        <Nav className="mr-auto">
+          <Link to={"add"} className="nav-link">
+            Add Book
+          </Link>
+          <Link to={"list"} className="nav-link">
+            Book List
+          </Link>
+          <Link to={"users"} className="nav-link">
+            User List
+          </Link>
+        </Nav>
+      </div>
+      <Nav className="ms-auto">
         <Link to={"logout"} className="nav-link" onClick={logout}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </Link>

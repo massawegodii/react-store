@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   faEnvelope,
   faLock,
-  faPhone,
   faUndo,
   faUser,
   faUserPlus,
@@ -17,20 +16,45 @@ import {
   InputGroup,
   Row,
 } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/register/userActions";
+import MyToast from "../MyToast";
 
 export const Register = () => {
   const initialState = {
-    name: "",
+    userName: "",
     email: "",
-    password: "",
-    mobile: "",
+    userFirstName: "",
+    userLastName: "",
+    userPassword: "",
   };
 
   const [user, setUser] = useState(initialState);
+  const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const userChange = (event) => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
+  };
+
+  const saveUser = () => {
+    dispatch(registerUser(user))
+      .then((response) => {
+        setShow(true);
+        setMessage(response.message);
+        resetRegisterForm();
+        setTimeout(() => {
+          setShow(false);
+          navigate("/login");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const resetRegisterForm = () => {
@@ -39,6 +63,10 @@ export const Register = () => {
 
   return (
     <div>
+      <div style={{ display: show ? "block" : "none" }}>
+        <MyToast show={show} message={message} type={"success"} />
+      </div>
+
       <Row className="justify-content-md-center">
         <Col xs={5}>
           <Card className={"border border-dark bg-dark text-white"}>
@@ -56,11 +84,11 @@ export const Register = () => {
                       <FormControl
                         autoComplete="off"
                         type="text"
-                        name="name"
-                        value={user.name}
+                        name="userName"
+                        value={user.userName}
                         onChange={userChange}
                         className={"bg-dark text-white"}
-                        placeholder="Enter Name"
+                        placeholder="Enter Username"
                       />
                     </InputGroup>
                   </Form.Group>
@@ -69,21 +97,59 @@ export const Register = () => {
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
-                        <FontAwesomeIcon icon={faEnvelope} />
+                        <FontAwesomeIcon icon={faUser} />
                       </InputGroup.Text>
                       <FormControl
                         required
                         autoComplete="off"
                         type="text"
-                        name="email"
-                        value={user.email}
+                        name="userFirstName"
+                        value={user.userFirstName}
                         onChange={userChange}
                         className={"bg-dark text-white"}
-                        placeholder="Enter Email Address"
+                        placeholder="Enter FirstName "
                       />
                     </InputGroup>
                   </Form.Group>
                 </Row>
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUser} />
+                      </InputGroup.Text>
+                      <FormControl
+                        autoComplete="off"
+                        type="text"
+                        name="userLastName"
+                        value={user.userLastName}
+                        onChange={userChange}
+                        className={"bg-dark text-white"}
+                        placeholder="Enter LastName"
+                      />
+                    </InputGroup>
+                  </Form.Group>
+                </Row>
+
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faEnvelope} />
+                      </InputGroup.Text>
+                      <FormControl
+                        autoComplete="off"
+                        type="email"
+                        name="email"
+                        value={user.email}
+                        onChange={userChange}
+                        className={"bg-dark text-white"}
+                        placeholder="Enter Email"
+                      />
+                    </InputGroup>
+                  </Form.Group>
+                </Row>
+
                 <Row className="mb-3">
                   <Form.Group as={Col}>
                     <InputGroup>
@@ -94,29 +160,11 @@ export const Register = () => {
                         required
                         autoComplete="off"
                         type="password"
-                        name="password"
-                        value={user.password}
+                        name="userPassword"
+                        value={user.userPassword}
                         onChange={userChange}
                         className={"bg-dark text-white"}
                         placeholder="Enter Password"
-                      />
-                    </InputGroup>
-                  </Form.Group>
-                </Row>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <InputGroup>
-                      <InputGroup.Text>
-                        <FontAwesomeIcon icon={faPhone} />
-                      </InputGroup.Text>
-                      <FormControl
-                        autoComplete="off"
-                        type="text"
-                        name="mobile"
-                        value={user.mobile}
-                        onChange={userChange}
-                        className={"bg-dark text-white"}
-                        placeholder="Enter Mobile Number"
                       />
                     </InputGroup>
                   </Form.Group>
@@ -128,7 +176,10 @@ export const Register = () => {
                 size="sm"
                 type="button"
                 variant="success"
-                disabled={user.email.length === 0 || user.password.length === 0}
+                onClick={saveUser}
+                disabled={
+                  user.userName.length === 0 || user.userPassword.length === 0
+                }
               >
                 <FontAwesomeIcon icon={faUserPlus} /> Register
               </Button>{" "}

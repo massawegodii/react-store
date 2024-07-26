@@ -22,8 +22,8 @@ import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
   const initialState = {
-    email: "",
-    password: "",
+    userName: "",
+    userPassword: "",
   };
 
   const [user, setUser] = useState(initialState);
@@ -42,16 +42,16 @@ const Login = (props) => {
   };
 
   const validateUser = () => {
-    dispatch(authenticateUser(user.email, user.password))
+    dispatch(authenticateUser(user.userName, user.userPassword))
       .then((response) => {
         console.log(response.data);
         navigate("/");
       })
       .catch((error) => {
         console.log(error.message);
-         setShow(true);
+        setShow(true);
         resetLoginForm();
-        setError("Invalid email and password");
+        setError("Invalid Username and Password");
       });
   };
 
@@ -84,8 +84,8 @@ const Login = (props) => {
                       required
                       autoComplete="off"
                       type="text"
-                      name="email"
-                      value={user.email}
+                      name="userName"
+                      value={user.userName}
                       onChange={credentialChange}
                       className={"bg-dark text-white"}
                       placeholder="Enter Email Address"
@@ -102,9 +102,9 @@ const Login = (props) => {
                     <FormControl
                       required
                       autoComplete="off"
-                      type="password"
-                      name="password"
-                      value={user.password}
+                      type="userPassword"
+                      name="userPassword"
+                      value={user.userPassword}
                       onChange={credentialChange}
                       className={"bg-dark text-white"}
                       placeholder="Enter Password"
@@ -120,7 +120,9 @@ const Login = (props) => {
               type="button"
               variant="success"
               onClick={validateUser}
-              disabled={user.email.length === 0 || user.password.length === 0}
+              disabled={
+                user.userName.length === 0 || user.userPassword.length === 0
+              }
             >
               <FontAwesomeIcon icon={faSignInAlt} /> Login
             </Button>{" "}
@@ -129,7 +131,9 @@ const Login = (props) => {
               type="button"
               variant="info"
               onClick={resetLoginForm}
-              disabled={user.email.length === 0 && user.password.length === 0}
+              disabled={
+                user.userName.length === 0 && user.userPassword.length === 0
+              }
             >
               <FontAwesomeIcon icon={faUndo} /> Reset
             </Button>

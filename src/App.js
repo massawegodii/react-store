@@ -23,7 +23,7 @@ function App() {
               <Route path="/add" exact Component={Book} />
               <Route path="/edit/:id" exact Component={Book} />
               <Route path="/list" exact Component={BookList} />
-              <Route path="/user" exact Component={UserList} />
+              <Route path="/users" exact Component={UserList} />
               <Route path="/login" exact Component={Login} />
               <Route path="/register" exact Component={Register} />
               <Route
